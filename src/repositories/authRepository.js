@@ -13,7 +13,7 @@ export async function userAlreadyExists(email) {
   return result.rowCount !== 0;
 }
 
-export async function addUserInDb(name, email, img_url, password) {
+export async function addUserInDb({ name, email, img_url, password }) {
   const result = await db.query(
     `
             INSERT INTO users (name, email, img_url, password)
