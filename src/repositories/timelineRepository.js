@@ -45,14 +45,6 @@ export async function createPostByUser(url, description, userId) {
     `,
     [url, description, userId]
   );
-  await db.query(
-    `
-  UPDATE posts
-  SET description = $1,
-    link = $2
-  WHERE user_id = $3 
-  `,
-    [description, url, userId]
-  );
+
   return result;
 }
