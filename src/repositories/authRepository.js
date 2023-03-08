@@ -39,3 +39,19 @@ export async function createSession({ user_id, token }) {
   );
   return result.rows[0];
 }
+
+export async function getUserByToken(token) {
+  // get user (id, name, email and img_url)  in users table by token from sessions table
+  const result = await db.query(
+    `
+        SELECT users.id, users.name, users.email, users.img_url
+        FROM users
+        JOIN sessions
+        ON users.id = sessions.user_id
+        WHERE sessions.token = $1
+        `,
+    [token]
+  );
+
+  return result.rows[0];
+}
