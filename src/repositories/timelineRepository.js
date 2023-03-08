@@ -49,7 +49,7 @@ export async function createPostByUser(url, description, userId) {
     `
   UPDATE posts
   SET description = $1,
-      url = $2
+    link = $2
   WHERE user_id = $3 
   `,
     [description, url, userId]
