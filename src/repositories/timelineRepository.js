@@ -6,6 +6,7 @@ export async function getTimeline() {
     SELECT 
       users.name AS user_name,
       users.img_url AS user_img_url,
+      posts.description AS post_comment,
       posts.id AS post_id,
       posts.link AS post_link,
       posts.user_id AS user_id
