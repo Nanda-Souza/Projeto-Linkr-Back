@@ -3,11 +3,8 @@ import authRouter from "./authRouter.js";
 import likesRouter from "./likesRouter.js";
 import timelineRouter from "./timelineRouter.js";
 
-
 const router = Router();
 
-router.use(authRouter);
-router.use(likesRouter);
-router.use(timelineRouter)
+router.use([authRouter, likesRouter, timelineRouter]);
 
 export default router;
