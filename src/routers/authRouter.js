@@ -7,9 +7,9 @@ import {
 import validateSchema from "../middlewares/schemaValidation.js";
 import { signInSchema, signUpSchema } from "../models/authSchema.js";
 
-const router = Router();
+const authRouter = Router();
 
-router.post("/sign-up", validateSchema(signUpSchema), signUpValidation, signUp);
-router.post("/sign-in", validateSchema(signInSchema), signInValidation, signIn);
+authRouter.post("/sign-up", validateSchema(signUpSchema), signUpValidation, signUp);
+authRouter.post("/sign-in", validateSchema(signInSchema), signInValidation, signIn);
 
-export default router;
+export default authRouter;
