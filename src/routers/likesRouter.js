@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { deslikePost, getLikeInfoController, likePost } from "../controllers/likesControllers";
-import validateSchema from "../middlewares/schemaValidation";
-import { validateToken } from "../middlewares/validateToken";
-import { likeSchema } from "../models/likeSchema";
+import { deslikePost, getLikeInfoController, likePost } from "../controllers/likesControllers.js";
+import validateSchema from "../middlewares/schemaValidation.js";
+import { validateToken } from "../middlewares/validateToken.js";
+import { likeSchema } from "../models/likeSchema.js";
 
 const likesRouter = Router();
 
