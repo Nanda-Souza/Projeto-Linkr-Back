@@ -37,7 +37,8 @@ export async function postLike(userId, postId) {
     const result = await db.query(
         `SELECT COUNT(*), array_agg(u.name) FROM likes l JOIN users u ON l.user_id = u.id WHERE l.post_id = $1 LIMIT 2;`,
         [postId]
-      );
+      ); const token = res.locals.token
+      const userId = getIdByToken(token)
     const obj = {
         likes: result.rows[0].count,
         users: result.rows[0].array_agg,

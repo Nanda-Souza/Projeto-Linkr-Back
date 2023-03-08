@@ -1,9 +1,4 @@
-import {
-  getIdByToken,
-  getLikeInfo,
-  postDeslike,
-  postLike,
-} from "../repositories/likesRepository.js";
+import { getIdByToken, getLikeInfo, postDeslike, postLike } from "../repositories/likesRepository.js";
 
 export async function likePost(req, res) {
   const token = res.locals.token;
