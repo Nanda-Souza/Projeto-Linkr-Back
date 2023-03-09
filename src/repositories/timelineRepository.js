@@ -12,6 +12,7 @@ export async function getTimeline() {
       posts.user_id AS user_id
     FROM users
     JOIN posts ON posts.user_id = users.id
+    ORDER BY created_at DESC
     LIMIT 20;
   `);
 
