@@ -1,6 +1,7 @@
 import { getIdByToken } from "../repositories/likesRepository.js";
 import {
   createPostByUser,
+  deletePostById,
   getTimeline,
 } from "../repositories/timelineRepository.js";
 
@@ -23,6 +24,17 @@ export async function listPost(req, res) {
   try {
     const result = await getTimeline();
     return res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
+export async function deletePost(req, res) {
+  const { id } = res.locals.post;
+  try {
+    await deletePostById(id);
+    return res.sendStatus(200);
   } catch (error) {
     console.log(error);
     return res.sendStatus(500);

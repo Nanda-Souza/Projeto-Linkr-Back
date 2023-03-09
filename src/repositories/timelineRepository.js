@@ -36,7 +36,6 @@ export async function getTimeline() {
   console.log(rowsWithMetadata);
 
   return rowsWithMetadata;
-
 }
 
 export async function createPostByUser(url, description, userId) {
@@ -47,6 +46,30 @@ export async function createPostByUser(url, description, userId) {
     VALUES ($1, $2, $3)
     `,
     [url, description, userId]
+  );
+
+  return result;
+}
+
+export async function getPostById(id) {
+  const result = await db.query(
+    `
+    SELECT * FROM posts
+    WHERE id = $1
+    `,
+    [id]
+  );
+
+  return result.rows[0];
+}
+
+export async function deletePostById(id) {
+  const result = await db.query(
+    `
+    DELETE FROM posts
+    WHERE id = $1
+    `,
+    [id]
   );
 
   return result;
