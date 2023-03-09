@@ -4,6 +4,7 @@ import urlMetadata from "url-metadata";
 export async function getTimeline() {
   const result = await db.query(`
     SELECT 
+      posts.created_at,
       users.name AS user_name,
       users.img_url AS user_img_url,
       posts.description AS post_comment,
@@ -12,7 +13,7 @@ export async function getTimeline() {
       posts.user_id AS user_id
     FROM users
     JOIN posts ON posts.user_id = users.id
-    ORDER BY created_at DESC
+    ORDER BY posts.created_at DESC
     LIMIT 20;
   `);
 
@@ -35,6 +36,7 @@ export async function getTimeline() {
   console.log(rowsWithMetadata);
 
   return rowsWithMetadata;
+
 }
 
 export async function createPostByUser(url, description, userId) {
