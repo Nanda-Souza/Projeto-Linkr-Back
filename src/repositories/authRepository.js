@@ -41,7 +41,6 @@ export async function createSession({ user_id, token }) {
 }
 
 export async function getUserByToken(token) {
-  // get user (id, name, email and img_url)  in users table by token from sessions table
   const result = await db.query(
     `
         SELECT users.id, users.name, users.email, users.img_url
