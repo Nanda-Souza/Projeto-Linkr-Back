@@ -1,7 +1,7 @@
 import { getIdByToken } from "../repositories/likesRepository.js";
 import { getPostById } from "../repositories/timelineRepository.js";
 
-export async function deletePostValidation(req, res, next) {
+export async function userPostValidation(req, res, next) {
   const { id } = req.params;
   const token = res.locals.token;
 

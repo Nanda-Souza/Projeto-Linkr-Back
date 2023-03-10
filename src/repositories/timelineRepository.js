@@ -78,3 +78,16 @@ export async function deletePostById(id) {
 
   return result;
 }
+
+export async function updatePostById(id, user_id, description){
+  const result = await db.query(`
+    UPDATE posts
+    SET description = $1
+    WHERE id = $2
+    AND user_id = $3
+  `, [description, id, user_id])
+
+  console.log(result)
+
+  return result
+}
