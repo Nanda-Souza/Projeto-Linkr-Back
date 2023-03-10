@@ -3,6 +3,7 @@ import {
   createPost,
   deletePost,
   listPost,
+  listUserPost,
   updatePost,
 } from "../controllers/timelineController.js";
 import validateSchema from "../middlewares/schemaValidation.js";
@@ -32,5 +33,7 @@ timelineRouter.patch(
   userPostValidation,
   updatePost
 );
+
+timelineRouter.get("/user/:id", validateToken, listUserPost)
 
 export default timelineRouter;
