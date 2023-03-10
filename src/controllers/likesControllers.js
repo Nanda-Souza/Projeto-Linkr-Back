@@ -3,9 +3,9 @@ import { getIdByToken, getLikeInfo, postDeslike, postLike } from "../repositorie
 export async function likePost(req, res) {
   const token = res.locals.token;
   const { postId } = req.body;
-  const userId = getIdByToken(token);
+  const userId = await getIdByToken(token);
   try {
-    await postLike(userId, postId);
+    await postLike(userId.user_id, postId);
     return res.sendStatus(201);
   } catch (error) {
     return res.sendStatus(500);
@@ -15,9 +15,9 @@ export async function likePost(req, res) {
 export async function deslikePost(req, res) {
   const token = res.locals.token;
   const { postId } = req.body;
-  const userId = getIdByToken(token);
+  const userId = await getIdByToken(token);
   try {
-    await postDeslike(userId, postId);
+    await postDeslike(userId.user_id, postId);
     return res.sendStatus(204);
   } catch (error) {
     return res.sendStatus(500);
