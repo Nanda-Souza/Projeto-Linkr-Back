@@ -3,6 +3,7 @@ import {
   createPostByUser,
   deletePostById,
   getTimeline,
+  getUserPosts,
   updatePostById,
 } from "../repositories/timelineRepository.js";
 
@@ -26,6 +27,19 @@ export async function listPost(req, res) {
   const userId = await getIdByToken(token);
   try {
     const result = await getTimeline(userId);
+    return res.status(200).send(result);
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
+export async function listUserPost(req, res) {
+  const {id} = req.params
+  const token = res.locals.token;
+  const userId = await getIdByToken(token);
+  try {
+    const result = await getUserPosts(userId, id);
     return res.status(200).send(result);
   } catch (error) {
     console.log(error);
