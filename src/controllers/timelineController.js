@@ -21,8 +21,10 @@ export async function createPost(req, res) {
 }
 
 export async function listPost(req, res) {
+  const token = res.locals.token
+  const userId = await getIdByToken(token)
   try {
-    const result = await getTimeline();
+    const result = await getTimeline(userId);
     return res.status(200).send(result);
   } catch (error) {
     console.log(error);

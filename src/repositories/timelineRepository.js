@@ -1,7 +1,8 @@
 import db from "../config/database.js";
 import urlMetadata from "url-metadata";
+import { getLikeInfo } from "./likesRepository.js";
 
-export async function getTimeline() {
+export async function getTimeline(userId) {
   const result = await db.query(`
     SELECT 
       posts.created_at,
@@ -17,8 +18,10 @@ export async function getTimeline() {
     LIMIT 20;
   `);
 
+  const postIds = result.rows.map((i) => i.post_id)
+  const likesArr = await getLikeInfo(postIds, userId)
   const rowsWithMetadata = await Promise.all(
-    result.rows.map(async (row) => {
+    result.rows.map(async (row, index) => {
       const { description, image, url, title } = await urlMetadata(
         row.post_link,
         { description: true, image: true, url: true, title: true }
@@ -29,6 +32,7 @@ export async function getTimeline() {
         post_image: image,
         post_url: url,
         post_title: title,
+        likeInfo: likesArr[index]
       };
     })
   );
