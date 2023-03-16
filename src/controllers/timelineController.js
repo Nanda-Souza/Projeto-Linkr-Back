@@ -35,7 +35,7 @@ export async function listPost(req, res) {
 }
 
 export async function listUserPost(req, res) {
-  const {id} = req.params
+  const { id } = req.params;
   const token = res.locals.token;
   const userId = await getIdByToken(token);
   try {
