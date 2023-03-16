@@ -37,7 +37,7 @@ export async function getTimeline(userId) {
     })
   );
 
-  console.log(rowsWithMetadata);
+  
 
   return rowsWithMetadata;
 }
