@@ -36,10 +36,9 @@ export async function getTopTrends() {
       LIMIT 20`,
       [trendName]
       );
-
-    console.log(result)
+    
     const postIds = result.rows.map((i) => i.post_id)
-    console.log(postIds)
+    
     const likesArr = await getLikeInfo(postIds, userId)
     
     const rowsWithMetadata = await Promise.all(
@@ -61,4 +60,9 @@ export async function getTopTrends() {
       
   
     return rowsWithMetadata;
+  }
+
+  export async function createHashtag(description, post_id) {
+    console.log(post_id, description) 
+    
   }
