@@ -1,6 +1,7 @@
 import db from "../config/database.js";
 import urlMetadata from "url-metadata";
 import { getLikeInfo } from "./likesRepository.js";
+import { createHashtag } from "./trendingRepository.js"
 
 export async function getTimeline(userId) {
   const result = await db.query(`
@@ -47,10 +48,16 @@ export async function createPostByUser(url, description, userId) {
     `
     INSERT INTO posts 
     (link, description, user_id)
-    VALUES ($1, $2, $3)
+    VALUES ($1, $2, $3) RETURNING id
     `,
     [url, description, userId]
   );
+
+  if (description.indexOf('#') > -1){
+    const post_id = result.rows[0].id
+    
+    createHashtag(post_id, description)
+  }
 
   return result;
 }

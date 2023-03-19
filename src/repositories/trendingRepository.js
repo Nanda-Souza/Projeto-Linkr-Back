@@ -36,10 +36,9 @@ export async function getTopTrends() {
       LIMIT 20`,
       [trendName]
       );
-
-    console.log(result)
+    
     const postIds = result.rows.map((i) => i.post_id)
-    console.log(postIds)
+    
     const likesArr = await getLikeInfo(postIds, userId)
     
     const rowsWithMetadata = await Promise.all(
@@ -61,4 +60,63 @@ export async function getTopTrends() {
       
   
     return rowsWithMetadata;
+  }
+
+  export async function createHashtag(post_id, description) {
+    const regex = /#(\w+)/g;
+    const matches = [];
+    let match;
+
+    while ((match = regex.exec(description)) !== null) {
+      matches.push(match[1]);
+    }
+    
+    for(let i = 0; i < matches.length; i = i + 1) {
+
+      try {
+
+        const checkHash = await db.query(`SELECT id FROM hashtags WHERE name = $1;`, [matches[i]]);
+    
+        if (checkHash.rowCount  === 0) {
+              const newHash = await db.query(
+                `
+                INSERT INTO hashtags 
+                (name)
+                VALUES ($1) RETURNING id
+                `,
+                [matches[i]]
+              );
+
+              const hashtag_id = newHash.rows[0].id
+
+              await db.query(
+                `
+                INSERT INTO post_hashtags 
+                (post_id, hashtag_id)
+                VALUES ($1, $2)
+                `,
+                [post_id, hashtag_id]
+              );
+              
+        }
+        else{
+          const hashtag_id = checkHash.rows[0].id
+
+          await db.query(
+            `
+            INSERT INTO post_hashtags 
+            (post_id, hashtag_id)
+            VALUES ($1, $2)
+            `,
+            [post_id, hashtag_id]
+          );
+
+        }
+      } catch (error) {
+            res.status(500).send(error)
+      }      
+    }
+    
+    
+    
   }
