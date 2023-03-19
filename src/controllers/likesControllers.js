@@ -14,7 +14,7 @@ export async function likePost(req, res) {
 
 export async function deslikePost(req, res) {
   const token = res.locals.token;
-  const { postId } = req.body;
+  const { postId } = req.params;
   const userId = await getIdByToken(token);
   try {
     await postDeslike(userId.user_id, postId);

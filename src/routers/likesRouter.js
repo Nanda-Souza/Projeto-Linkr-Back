@@ -7,7 +7,7 @@ import { likeSchema } from "../models/likeSchema.js";
 const likesRouter = Router();
 
 likesRouter.post("/like", validateToken, validateSchema(likeSchema), likePost);
-likesRouter.delete("/like", validateToken, validateSchema(likeSchema), deslikePost);
+likesRouter.delete("/like/:postId", validateToken, deslikePost);
 likesRouter.get("/like", validateToken, validateSchema(likeSchema), getLikeInfoController);
 
 export default likesRouter;
