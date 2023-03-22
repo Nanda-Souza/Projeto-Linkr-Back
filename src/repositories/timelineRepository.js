@@ -134,7 +134,5 @@ export async function getUserPosts(userId, profileId){
     })
   );
 
-  console.log(rowsWithMetadata);
-
   return rowsWithMetadata;
 }
