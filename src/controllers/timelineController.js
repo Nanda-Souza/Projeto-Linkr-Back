@@ -23,10 +23,18 @@ export async function createPost(req, res) {
 }
 
 export async function listPost(req, res) {
+  let { offset } = req.query;
+
+  if (!offset) {
+    offset = 0;
+  } else {
+    offset = Number(offset);
+  }
+
   const token = res.locals.token;
   const userId = await getIdByToken(token);
   try {
-    const result = await getTimeline(userId);
+    const result = await getTimeline(userId, offset);
     return res.status(200).send(result);
   } catch (error) {
     console.log(error);
