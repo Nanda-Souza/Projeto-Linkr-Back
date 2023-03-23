@@ -35,29 +35,42 @@ export async function postLike(userId, postId) {
   }
 
   export async function getLikeInfo(postIds, userId) {
-      const result = await db.query(`SELECT 
-      p.id AS post_id, 
-      COALESCE(COUNT(l.*), 0) AS total_likes, 
-      (
-        SELECT COALESCE(array_agg(u.name) , ARRAY[]::varchar[])
-        FROM likes l2
-        JOIN users u ON u.id = l2.user_id
-        WHERE l2.post_id = p.id
-        OFFSET 0
-        LIMIT 3
-      ) AS users_liked, 
-      bool_or(l.user_id = $1) AS has_liked
-    FROM 
-      posts p
-      LEFT JOIN likes l ON p.id = l.post_id
-    WHERE 
-      p.id = ANY($2::int[])
-    GROUP BY 
-      p.id;
-    
-  `,[userId.user_id, postIds])
+    const result = await db.query(
+      `SELECT 
+         p.id AS post_id, 
+         COALESCE(COUNT(l.*), 0) AS total_likes, 
+         (
+           SELECT COALESCE(array_agg(u.name), ARRAY[]::varchar[])
+           FROM likes l2
+           JOIN users u ON u.id = l2.user_id
+           WHERE l2.post_id = p.id
+           OFFSET 0
+           LIMIT 3
+         ) AS users_liked, 
+         bool_or(l.user_id = $1) AS has_liked
+       FROM 
+         posts p
+         LEFT JOIN likes l ON p.id = l.post_id
+       WHERE 
+         p.id = ANY($2::int[])
+       GROUP BY 
+         p.id;
+      `,
+      [userId.user_id, postIds]
+    );
   
-      return result.rows;
+    
+    const likeInfoDict = {};
+    result.rows.forEach(row => {
+      likeInfoDict[row.post_id] = row;
+    });
+  
+   
+    const likeInfoArr = postIds.map(postId => {
+      return likeInfoDict[postId];
+    });
+  
+    return likeInfoArr;
   }
-
+  
   
