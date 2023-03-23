@@ -100,6 +100,18 @@ export async function updatePostById(id, user_id, description){
 }
 
 export async function getUserPosts(userId, profileId){
+  
+  const userResult = await db.query(`
+    SELECT name, img_url
+    FROM users
+    WHERE id = $1;
+  `, [profileId]);
+
+  const user = userResult.rows[0] || {};
+  if(!user){
+    return null
+  }
+  
   const result = await db.query(`
   SELECT 
     posts.created_at,
@@ -134,5 +146,8 @@ export async function getUserPosts(userId, profileId){
     })
   );
 
-  return rowsWithMetadata;
+  return {
+    user,
+    posts: rowsWithMetadata
+  };
 }
