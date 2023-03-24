@@ -347,12 +347,15 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 -- Data for Name: hashtags; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public.hashtags VALUES (3, 'Peppoza');
+INSERT INTO public.hashtags VALUES (4, 'testando');
 
 
 --
 -- Data for Name: likes; Type: TABLE DATA; Schema: public; Owner: -
 --
 
+INSERT INTO public.likes VALUES (11, 1, 33);
 
 
 --
@@ -365,7 +368,17 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 -- Data for Name: posts; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.posts VALUES (23, 2, 'alou alou', 'https://web.whatsapp.com/', false, NULL, '2023-03-23 10:19:47.62216');
+INSERT INTO public.posts VALUES (30, 1, '1', 'https://web.whatsapp.com/', false, NULL, '2023-03-23 14:27:30.615298');
+INSERT INTO public.posts VALUES (31, 1, '2', 'https://web.whatsapp.com/', false, NULL, '2023-03-23 14:27:34.119702');
+INSERT INTO public.posts VALUES (32, 1, '3', 'https://web.whatsapp.com/', false, NULL, '2023-03-23 14:27:37.839719');
+INSERT INTO public.posts VALUES (33, 1, '4', 'https://web.whatsapp.com/', false, NULL, '2023-03-23 14:27:41.273307');
+INSERT INTO public.posts VALUES (34, 1, '5', 'https://web.whatsapp.com/', false, NULL, '2023-03-23 14:27:44.891763');
+INSERT INTO public.posts VALUES (35, 1, '6', 'https://web.whatsapp.com/', false, NULL, '2023-03-23 14:27:49.013462');
+INSERT INTO public.posts VALUES (36, 1, '7', 'https://web.whatsapp.com/', false, NULL, '2023-03-23 14:27:52.50128');
+INSERT INTO public.posts VALUES (37, 1, '8', 'https://web.whatsapp.com/', false, NULL, '2023-03-23 14:27:56.354183');
+INSERT INTO public.posts VALUES (38, 1, '9', 'https://web.whatsapp.com/', false, NULL, '2023-03-23 14:28:03.67737');
+INSERT INTO public.posts VALUES (39, 1, '10', 'https://web.whatsapp.com/', false, NULL, '2023-03-23 14:28:12.254995');
+INSERT INTO public.posts VALUES (40, 1, 'teste', 'https://web.whatsapp.com/', false, NULL, '2023-03-23 19:51:53.983543');
 
 
 --
@@ -382,6 +395,7 @@ INSERT INTO public.sessions VALUES (7, 2, 'a89d78f0-4947-443d-9612-6d93edfc8c4f'
 INSERT INTO public.sessions VALUES (8, 1, '7db80dbf-564d-412d-8b9f-db2e61262694', '2023-03-22 21:16:30.703539');
 INSERT INTO public.sessions VALUES (9, 1, '8c7ae896-2f55-4482-bb25-dba351b236ba', '2023-03-23 10:10:31.727447');
 INSERT INTO public.sessions VALUES (10, 2, '543adb2d-7c70-4f41-8127-5822799d7ba2', '2023-03-23 10:14:12.606201');
+INSERT INTO public.sessions VALUES (11, 2, '9f94314e-80c9-444c-8c1f-1f9496be1d87', '2023-03-23 12:16:19.105997');
 
 
 --
@@ -410,35 +424,35 @@ SELECT pg_catalog.setval('public.follows_id_seq', 1, false);
 -- Name: hashtags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.hashtags_id_seq', 2, true);
+SELECT pg_catalog.setval('public.hashtags_id_seq', 4, true);
 
 
 --
 -- Name: likes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.likes_id_seq', 1, false);
+SELECT pg_catalog.setval('public.likes_id_seq', 12, true);
 
 
 --
 -- Name: post_hashtags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.post_hashtags_id_seq', 3, true);
+SELECT pg_catalog.setval('public.post_hashtags_id_seq', 5, true);
 
 
 --
 -- Name: posts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.posts_id_seq', 23, true);
+SELECT pg_catalog.setval('public.posts_id_seq', 41, true);
 
 
 --
 -- Name: sessions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.sessions_id_seq', 10, true);
+SELECT pg_catalog.setval('public.sessions_id_seq', 11, true);
 
 
 --
