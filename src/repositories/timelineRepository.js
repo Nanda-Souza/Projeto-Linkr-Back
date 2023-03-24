@@ -9,7 +9,7 @@ export async function getTimeline(userId, offset) {
   if (offset) {
     offsetQuery = `WHERE posts.id < ${offset}`;
   }
-
+  
   const result = await db.query(
     `
     SELECT 
@@ -23,9 +23,12 @@ export async function getTimeline(userId, offset) {
     FROM users
     JOIN posts ON posts.user_id = users.id
     ${offsetQuery}
+    AND
+    users.id 
+	  IN (select follow_id FROM follows where user_id = $1)
     ORDER BY posts.created_at DESC
-    LIMIT 10;
-  `
+    LIMIT 10;`,
+    [userId.user_id]
   );
 
   const postIds = result.rows.map((i) => i.post_id);
