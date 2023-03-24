@@ -3,8 +3,10 @@ import { followUser, searchFollower, searchUser, unfollowUser } from "../reposit
 
 export async function searchUserByName(req, res){
     const search = req.query.search   
+    const token = res.locals.token;
+    const userId = await getIdByToken(token)
     try {
-        const result = await searchUser(search)
+        const result = await searchUser(search, userId.user_id)
         return res.status(200).send(result);
         
     } catch (error) {
