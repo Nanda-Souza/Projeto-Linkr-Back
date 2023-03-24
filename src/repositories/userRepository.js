@@ -48,3 +48,12 @@ export async function searchFollower(userId, id){
 
    return result
 }
+
+export async function isFollowing(userId){
+   const result = await db.query(`
+      SELECT count(*) FROM follows
+      WHERE user_id = $1      
+   `, [userId])
+
+   return result
+}
