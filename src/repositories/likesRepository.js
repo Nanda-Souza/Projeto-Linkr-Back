@@ -80,3 +80,26 @@ export async function deletePostLikes(postId) {
 
   return;
 }
+
+export async function getNumberOfComments(postIds) {
+  const result = await db.query(
+    `
+    SELECT 
+      post_id,
+      COUNT(*) AS comment_count
+    FROM comments
+    WHERE post_id IN (${postIds.join(",")})
+    GROUP BY post_id;
+    `
+  );
+
+  const commentCounts = [];
+  postIds.forEach(postId => {
+    const row = result.rows.find(row => row.post_id === postId);
+    commentCounts.push(row ? row.comment_count : 0);
+  });
+
+  return commentCounts;
+}
+
+
