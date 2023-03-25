@@ -1,10 +1,21 @@
 import db from "../config/database.js";
 
-export async function searchUser(search){
+export async function searchUser(search, userId){
    const result = await db.query(`
-    SELECT users.name, users.id, users.img_url FROM users
-    WHERE LOWER(name) LIKE LOWER($1)
-   `, [`%${search}%`])
+   SELECT users.name, users.id, users.img_url, true as followed
+   FROM follows
+   LEFT JOIN users ON follows.follow_id = users.id
+   WHERE follows.user_id = $1 AND LOWER(users.name) LIKE LOWER($2)
+   
+   UNION ALL
+   
+   SELECT users.name, users.id, users.img_url, false as followed
+   FROM users
+   WHERE users.id NOT IN (
+     SELECT follow_id FROM follows WHERE user_id = $1
+   ) AND LOWER(users.name) LIKE LOWER($2)
+   `, [userId, `%${search}%`])
+   
 
    return result.rows
 }
@@ -35,7 +46,14 @@ export async function searchFollower(userId, id){
       AND follow_id = $2
    `, [userId, id])
 
-   console.log("O seguidor é:", result.rows[0])
+   return result
+}
+
+export async function isFollowing(userId){
+   const result = await db.query(`
+      SELECT count(*) FROM follows
+      WHERE user_id = $1      
+   `, [userId])
 
    return result
 }

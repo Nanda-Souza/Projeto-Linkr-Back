@@ -80,3 +80,55 @@ export async function deletePostLikes(postId) {
 
   return;
 }
+
+export async function getNumberOfComments(postIds) {
+  if (postIds.length === 0) {
+    return [];
+  }
+
+  const result = await db.query(
+    `
+    SELECT 
+      post_id,
+      COUNT(*) AS comment_count
+    FROM comments
+    WHERE post_id IN (${postIds.join(",")})
+    GROUP BY post_id;
+    `
+  );
+
+  const commentCounts = [];
+  postIds.forEach(postId => {
+    const row = result.rows.find(row => row.post_id === postId);
+    commentCounts.push(row ? row.comment_count : 0);
+  });
+
+  return commentCounts;
+}
+
+export async function commentPost(userId, postId, comment) {
+  const result = await db.query(
+    `
+          INSERT INTO comments (user_id, post_id, comment) VALUES($1, $2, $3)
+       `,
+    [userId, postId, comment]
+  );
+
+  return result;
+}
+
+export async function getComments(postId) {
+  const result = await db.query(
+    `
+      SELECT users.name, users.img_url, comments.comment
+      FROM comments
+      JOIN users ON comments.user_id = users.id
+      WHERE comments.post_id = $1
+      ORDER BY comments.id ASC
+    `,
+    [postId]
+  );
+
+  return result.rows;
+}
+
