@@ -1,4 +1,4 @@
-import { getIdByToken, getLikeInfo, postDeslike, postLike } from "../repositories/likesRepository.js";
+import { commentPost, getComments, getIdByToken, getLikeInfo, postDeslike, postLike } from "../repositories/likesRepository.js";
 
 export async function likePost(req, res) {
   const token = res.locals.token;
@@ -28,6 +28,30 @@ export async function getLikeInfoController(req, res) {
   const { postId } = req.body;
   try {
     const result = await getLikeInfo(postId);
+    return res.status(200).send(result);
+  } catch (error) {
+    return res.sendStatus(500);
+  }
+}
+
+export async function commentPostController(req, res) {
+  const token = res.locals.token;
+  const { postId } = req.params;
+  const { comment } = req.body;
+  const userId = await getIdByToken(token);
+  try {
+    await commentPost(userId.user_id, postId, comment);
+    return res.sendStatus(201);
+  } catch (error) {
+    
+    return res.sendStatus(500);
+  }
+}
+
+export async function getCommentController(req, res) {
+  const { postId } = req.params;
+  try {
+    const result = await getComments(postId);
     return res.status(200).send(result);
   } catch (error) {
     return res.sendStatus(500);

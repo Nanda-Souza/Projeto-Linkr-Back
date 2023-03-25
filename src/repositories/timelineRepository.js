@@ -1,6 +1,6 @@
 import db from "../config/database.js";
 import urlMetadata from "url-metadata";
-import { getLikeInfo } from "./likesRepository.js";
+import { getLikeInfo, getNumberOfComments } from "./likesRepository.js";
 import { createHashtag } from "./trendingRepository.js";
 
 export async function getTimeline(userId, offset) {
@@ -33,6 +33,7 @@ export async function getTimeline(userId, offset) {
 
   const postIds = result.rows.map((i) => i.post_id);
   const likesArr = await getLikeInfo(postIds, userId);
+  const commentCount = await getNumberOfComments(postIds);
   const rowsWithMetadata = await Promise.all(
     result.rows.map(async (row, index) => {
       const { description, image, url, title } = await urlMetadata(
@@ -46,6 +47,7 @@ export async function getTimeline(userId, offset) {
         post_url: url,
         post_title: title,
         likeInfo: likesArr[index],
+        commentCount: commentCount[index]
       };
     })
   );
