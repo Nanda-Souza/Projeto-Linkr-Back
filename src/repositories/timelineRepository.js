@@ -33,7 +33,9 @@ export async function getTimeline(userId, offset, limit) {
     ${offsetQuery}
     AND
     users.id 
-	  IN (select follow_id FROM follows where user_id = $1)
+	  IN (SELECT follow_id FROM follows WHERE user_id = $1
+      UNION ALL
+	      SELECT id as follow_id FROM users WHERE id = $1)
     ORDER BY posts.created_at DESC
     ${limitQuery};`,
     [userId.user_id]
