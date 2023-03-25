@@ -33,7 +33,7 @@ export async function getTimeline(userId, offset) {
 
   const postIds = result.rows.map((i) => i.post_id);
   const likesArr = await getLikeInfo(postIds, userId);
-  const commentCount = await getNumberOfComments(postIds)
+  const commentCount = await getNumberOfComments(postIds);
   const rowsWithMetadata = await Promise.all(
     result.rows.map(async (row, index) => {
       const { description, image, url, title } = await urlMetadata(

@@ -82,6 +82,10 @@ export async function deletePostLikes(postId) {
 }
 
 export async function getNumberOfComments(postIds) {
+  if (postIds.length === 0) {
+    return [];
+  }
+
   const result = await db.query(
     `
     SELECT 
@@ -102,4 +106,29 @@ export async function getNumberOfComments(postIds) {
   return commentCounts;
 }
 
+export async function commentPost(userId, postId, comment) {
+  const result = await db.query(
+    `
+          INSERT INTO comments (user_id, post_id, comment) VALUES($1, $2, $3)
+       `,
+    [userId, postId, comment]
+  );
+
+  return result;
+}
+
+export async function getComments(postId) {
+  const result = await db.query(
+    `
+      SELECT users.name, users.img_url, comments.comment
+      FROM comments
+      JOIN users ON comments.user_id = users.id
+      WHERE comments.post_id = $1
+      ORDER BY comments.created_at ASC
+    `,
+    [postId]
+  );
+
+  return result.rows;
+}
 
