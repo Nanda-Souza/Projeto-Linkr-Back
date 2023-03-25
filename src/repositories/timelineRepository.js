@@ -3,13 +3,21 @@ import urlMetadata from "url-metadata";
 import { getLikeInfo } from "./likesRepository.js";
 import { createHashtag } from "./trendingRepository.js";
 
-export async function getTimeline(userId, offset) {
+export async function getTimeline(userId, offset, limit) {
   let offsetQuery = "";
+  let limitQuery = "";
 
-  if (offset) {
-    offsetQuery = `WHERE posts.id < ${offset}`;
+  if (limit) {
+    limitQuery = `LIMIT ${limit}`;
+    if (offset) {
+      offsetQuery = `WHERE posts.id < ${offset}`;
+    }
   }
-  
+
+  if (offset && !limit) {
+    offsetQuery = `WHERE posts.id > ${offset}`;
+  }
+
   const result = await db.query(
     `
     SELECT 
@@ -27,7 +35,7 @@ export async function getTimeline(userId, offset) {
     users.id 
 	  IN (select follow_id FROM follows where user_id = $1)
     ORDER BY posts.created_at DESC
-    LIMIT 10;`,
+    ${limitQuery};`,
     [userId.user_id]
   );
 

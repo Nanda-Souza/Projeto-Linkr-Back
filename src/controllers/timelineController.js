@@ -27,18 +27,25 @@ export async function createPost(req, res) {
 }
 
 export async function listPost(req, res) {
-  let { offset } = req.query;
+  let { oldestPost, newestPost, limit } = req.query;
+  let offset = false;
 
-  if (!offset) {
-    offset = 0;
+  if (oldestPost) {
+    offset = Number(oldestPost);
+  } else if (newestPost) {
+    offset = Number(newestPost);
+  }
+
+  if (!limit) {
+    limit = false;
   } else {
-    offset = Number(offset);
+    limit = Number(limit);
   }
 
   const token = res.locals.token;
   const userId = await getIdByToken(token);
   try {
-    const result = await getTimeline(userId, offset);
+    const result = await getTimeline(userId, offset, limit);
     return res.status(200).send(result);
   } catch (error) {
     console.log(error);
