@@ -124,7 +124,7 @@ export async function getComments(postId) {
       FROM comments
       JOIN users ON comments.user_id = users.id
       WHERE comments.post_id = $1
-      ORDER BY comments.created_at ASC
+      ORDER BY comments.id ASC
     `,
     [postId]
   );

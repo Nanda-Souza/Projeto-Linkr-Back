@@ -10,7 +10,7 @@ const likesRouter = Router();
 likesRouter.post("/like", validateToken, validateSchema(likeSchema), likePost);
 likesRouter.delete("/like/:postId", validateToken, deslikePost);
 likesRouter.get("/like", validateToken, validateSchema(likeSchema), getLikeInfoController);
-likesRouter.post("/comment/:postId", validateToken, validateSchema(commentSchema), commentPostController)
-likesRouter.get("/comment/:postId", validateToken, getCommentController)
+likesRouter.post("/comment/:postId", validateToken, validateSchema(commentSchema), commentPostController);
+likesRouter.get("/comment/:postId", validateToken, getCommentController);
 
 export default likesRouter;
