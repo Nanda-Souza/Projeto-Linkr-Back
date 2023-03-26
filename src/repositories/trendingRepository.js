@@ -1,6 +1,6 @@
 import db from "../config/database.js";
 import urlMetadata from "url-metadata";
-import { getLikeInfo } from "./likesRepository.js";
+import { getLikeInfo, getNumberOfComments, getNumberOfReposts } from "./likesRepository.js";
 
 export async function getTopTrends() {
   const result = await db.query(`
@@ -27,12 +27,14 @@ export async function getPostTrends(trendName, userId) {
         posts.description AS post_comment,
         posts.id AS post_id,
         posts.link AS post_link,
-        posts.user_id AS user_id
+        posts.user_id AS user_id,
+        posts.is_repost,
+        posts.original_post_id
       FROM users
       JOIN posts ON posts.user_id = users.id
       JOIN post_hashtags ON post_hashtags.post_id = posts.id
       JOIN hashtags ON hashtags.id = post_hashtags.hashtag_id
-      WHERE hashtags.name = $1 
+      WHERE hashtags.name = $1
       ORDER BY posts.created_at DESC
       LIMIT 20`,
     [trendName]
@@ -41,6 +43,8 @@ export async function getPostTrends(trendName, userId) {
   const postIds = result.rows.map((i) => i.post_id);
 
   const likesArr = await getLikeInfo(postIds, userId);
+  const commentCount = await getNumberOfComments(postIds);
+  const shareCount = await getNumberOfReposts(postIds);
 
   const rowsWithMetadata = await Promise.all(
     result.rows.map(async (row, index) => {
@@ -55,6 +59,8 @@ export async function getPostTrends(trendName, userId) {
         post_url: url,
         post_title: title,
         likeInfo: likesArr[index],
+        commentCount: commentCount[index],
+        shareCount: shareCount[index]
       };
     })
   );
