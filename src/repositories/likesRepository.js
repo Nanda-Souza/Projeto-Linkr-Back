@@ -106,6 +106,31 @@ export async function getNumberOfComments(postIds) {
   return commentCounts;
 }
 
+export async function getNumberOfReposts(postIds) {
+  if (postIds.length === 0) {
+    return [];
+  }
+
+  const result = await db.query(
+    `
+    SELECT 
+    original_post_id,
+      COUNT(*) AS repost_count
+    FROM posts
+    WHERE original_post_id IN (${postIds.join(",")})
+    GROUP BY original_post_id;
+    `
+  );
+
+  const repostCounts = [];
+  postIds.forEach(postId => {
+    const row = result.rows.find(row => row.original_post_id === postId);
+    repostCounts.push(row ? row.repost_count : 0);
+  });
+
+  return repostCounts;
+}
+
 export async function commentPost(userId, postId, comment) {
   const result = await db.query(
     `
