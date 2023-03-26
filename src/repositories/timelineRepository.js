@@ -69,14 +69,19 @@ export async function getTimeline(userId, offset, limit) {
   return rowsWithMetadata;
 }
 
-export async function createPostByUser(url, description, userId) {
+export async function createPostByUser(url, description, userId, repost, originalId) {  
+  
+  if (repost === undefined){
+      repost = false
+  }
+
   const result = await db.query(
     `
     INSERT INTO posts 
-    (link, description, user_id)
-    VALUES ($1, $2, $3) RETURNING id
+    (link, description, user_id, is_repost, original_post_id)
+    VALUES ($1, $2, $3, $4, $5) RETURNING id
     `,
-    [url, description, userId]
+    [url, description, userId, repost, originalId]
   );
 
   if (description.indexOf("#") > -1) {

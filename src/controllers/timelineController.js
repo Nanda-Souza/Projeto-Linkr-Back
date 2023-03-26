@@ -12,13 +12,13 @@ import {
 import { deletePostHashtags } from "../repositories/trendingRepository.js";
 
 export async function createPost(req, res) {
-  const { url, description } = req.body;
+  const { url, description, repost, originalId} = req.body;
   const token = res.locals.token;
 
   try {
     const { user_id } = await getIdByToken(token);
 
-    await createPostByUser(url, description, user_id);
+    await createPostByUser(url, description, user_id, repost, originalId);
     return res.sendStatus(201);
   } catch (error) {
     console.log(error);
