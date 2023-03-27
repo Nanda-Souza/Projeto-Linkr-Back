@@ -98,8 +98,8 @@ export async function getNumberOfComments(postIds) {
   );
 
   const commentCounts = [];
-  postIds.forEach(postId => {
-    const row = result.rows.find(row => row.post_id === postId);
+  postIds.forEach((postId) => {
+    const row = result.rows.find((row) => row.post_id === postId);
     commentCounts.push(row ? row.comment_count : 0);
   });
 
@@ -123,8 +123,8 @@ export async function getNumberOfReposts(postIds) {
   );
 
   const repostCounts = [];
-  postIds.forEach(postId => {
-    const row = result.rows.find(row => row.original_post_id === postId);
+  postIds.forEach((postId) => {
+    const row = result.rows.find((row) => row.original_post_id === postId);
     repostCounts.push(row ? row.repost_count : 0);
   });
 
@@ -171,7 +171,7 @@ export async function getComments(postId, token) {
     `,
     [userId]
   );
-  const followedIds = followsResult.rows.map(row => row.follow_id);
+  const followedIds = followsResult.rows.map((row) => row.follow_id);
 
   const result = await db.query(
     `
@@ -184,9 +184,9 @@ export async function getComments(postId, token) {
     [postId]
   );
 
-  const comments = result.rows.map(row => {
+  const comments = result.rows.map((row) => {
     const commentAuthorId = row.user_id;
-    let status = '';
+    let status = "";
     if (commentAuthorId === postAuthorId) {
       status = `• post's author`;
     } else if (followedIds.includes(commentAuthorId)) {
@@ -194,11 +194,20 @@ export async function getComments(postId, token) {
     }
     return {
       ...row,
-      status
+      status,
     };
   });
 
   return comments;
 }
 
+export async function deletePostComments(postId) {
+  await db.query(
+    `
+          DELETE FROM comments WHERE post_id = $1
+       `,
+    [postId]
+  );
 
+  return;
+}
