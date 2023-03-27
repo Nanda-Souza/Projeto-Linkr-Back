@@ -1,7 +1,13 @@
 import db from "../config/database.js";
 import urlMetadata from "url-metadata";
-import { getLikeInfo, getNumberOfComments, getNumberOfReposts } from "./likesRepository.js";
-import { createHashtag } from "./trendingRepository.js";
+import {
+  deletePostComments,
+  deletePostLikes,
+  getLikeInfo,
+  getNumberOfComments,
+  getNumberOfReposts,
+} from "./likesRepository.js";
+import { createHashtag, deletePostHashtags } from "./trendingRepository.js";
 
 export async function getTimeline(userId, offset, limit) {
   let offsetQuery = "";
@@ -61,7 +67,7 @@ export async function getTimeline(userId, offset, limit) {
         post_title: title,
         likeInfo: likesArr[index],
         commentCount: commentCount[index],
-        shareCount: shareCount[index]
+        shareCount: shareCount[index],
       };
     })
   );
@@ -69,10 +75,15 @@ export async function getTimeline(userId, offset, limit) {
   return rowsWithMetadata;
 }
 
-export async function createPostByUser(url, description, userId, repost, originalId) {  
-  
-  if (repost === undefined){
-      repost = false
+export async function createPostByUser(
+  url,
+  description,
+  userId,
+  repost,
+  originalId
+) {
+  if (repost === undefined) {
+    repost = false;
   }
 
   const result = await db.query(
@@ -106,6 +117,10 @@ export async function getPostById(id) {
 }
 
 export async function deletePostById(id) {
+  await deletePostLikes(id);
+  await deletePostHashtags(id);
+  await deletePostComments(id);
+
   const result = await db.query(
     `
     DELETE FROM posts
@@ -128,7 +143,6 @@ export async function updatePostById(id, user_id, description) {
     [description, id, user_id]
   );
 
-  console.log(result);
 
   return result;
 }

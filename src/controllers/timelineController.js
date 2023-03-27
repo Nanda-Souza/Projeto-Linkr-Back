@@ -1,7 +1,4 @@
-import {
-  getIdByToken,
-  deletePostLikes,
-} from "../repositories/likesRepository.js";
+import { getIdByToken } from "../repositories/likesRepository.js";
 import {
   createPostByUser,
   deletePostById,
@@ -9,10 +6,9 @@ import {
   getUserPosts,
   updatePostById,
 } from "../repositories/timelineRepository.js";
-import { deletePostHashtags } from "../repositories/trendingRepository.js";
 
 export async function createPost(req, res) {
-  const { url, description, repost, originalId} = req.body;
+  const { url, description, repost, originalId } = req.body;
   const token = res.locals.token;
 
   try {
@@ -69,9 +65,6 @@ export async function listUserPost(req, res) {
 export async function deletePost(req, res) {
   const { id } = res.locals.post;
   try {
-    await deletePostLikes(id);
-    await deletePostHashtags(id);
-
     await deletePostById(id);
     return res.sendStatus(200);
   } catch (error) {
