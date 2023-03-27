@@ -142,10 +142,40 @@ export async function commentPost(userId, postId, comment) {
   return result;
 }
 
-export async function getComments(postId) {
+export async function getComments(postId, token) {
+  const sessionResult = await db.query(
+    `
+      SELECT user_id
+      FROM sessions
+      WHERE token = $1
+    `,
+    [token]
+  );
+  const userId = sessionResult.rows[0].user_id;
+
+  const postResult = await db.query(
+    `
+      SELECT user_id
+      FROM posts
+      WHERE id = $1
+    `,
+    [postId]
+  );
+  const postAuthorId = postResult.rows[0].user_id;
+
+  const followsResult = await db.query(
+    `
+      SELECT follow_id
+      FROM follows
+      WHERE user_id = $1
+    `,
+    [userId]
+  );
+  const followedIds = followsResult.rows.map(row => row.follow_id);
+
   const result = await db.query(
     `
-      SELECT users.name, users.img_url, comments.comment
+      SELECT users.name, users.img_url, comments.comment, comments.user_id
       FROM comments
       JOIN users ON comments.user_id = users.id
       WHERE comments.post_id = $1
@@ -154,6 +184,21 @@ export async function getComments(postId) {
     [postId]
   );
 
-  return result.rows;
+  const comments = result.rows.map(row => {
+    const commentAuthorId = row.user_id;
+    let status = '';
+    if (commentAuthorId === postAuthorId) {
+      status = `• post's author`;
+    } else if (followedIds.includes(commentAuthorId)) {
+      status = `• following`;
+    }
+    return {
+      ...row,
+      status
+    };
+  });
+
+  return comments;
 }
+
 
