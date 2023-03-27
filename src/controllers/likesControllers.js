@@ -50,8 +50,9 @@ export async function commentPostController(req, res) {
 
 export async function getCommentController(req, res) {
   const { postId } = req.params;
+  const token = res.locals.token;
   try {
-    const result = await getComments(postId);
+    const result = await getComments(postId, token);
     return res.status(200).send(result);
   } catch (error) {
     return res.sendStatus(500);
